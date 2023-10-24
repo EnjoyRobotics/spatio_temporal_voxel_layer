@@ -684,11 +684,14 @@ void SpatioTemporalVoxelLayer::updateCosts(
   }
 
   switch (_combination_method) {
-    case 0:
+    case CombinationMethod::Overwrite:
       updateWithOverwrite(master_grid, min_i, min_j, max_i, max_j);
       break;
-    case 1:
+    case CombinationMethod::Max:
       updateWithMax(master_grid, min_i, min_j, max_i, max_j);
+      break;
+    case CombinationMethod::MaxWithoutUnknownOverwrite:
+      updateWithMaxWithoutUnknownOverwrite(master_grid, min_i, min_j, max_i, max_j);
       break;
     default:
       break;
