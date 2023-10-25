@@ -100,8 +100,10 @@ void SpatioTemporalVoxelLayer::onInitialize(void)
   declareParameter("voxel_size", rclcpp::ParameterValue(0.05));
   node->get_parameter(name_ + ".voxel_size", _voxel_size);
   // 1=takes highest in layers, 0=takes current layer
+  int combination_method_param{};
   declareParameter("combination_method", rclcpp::ParameterValue(1));
-  node->get_parameter(name_ + ".combination_method", _combination_method);
+  node->get_parameter(name_ + ".combination_method", combination_method_param);
+  _combination_method = combination_method_from_int(combination_method_param);
   // number of voxels per vertical needed to have obstacle
   declareParameter("mark_threshold", rclcpp::ParameterValue(0));
   node->get_parameter(name_ + ".mark_threshold", _mark_threshold);
@@ -684,11 +686,14 @@ void SpatioTemporalVoxelLayer::updateCosts(
   }
 
   switch (_combination_method) {
-    case 0:
+    case nav2_costmap_2d::CombinationMethod::Overwrite:
       updateWithOverwrite(master_grid, min_i, min_j, max_i, max_j);
       break;
-    case 1:
+    case nav2_costmap_2d::CombinationMethod::Max:
       updateWithMax(master_grid, min_i, min_j, max_i, max_j);
+      break;
+    case nav2_costmap_2d::CombinationMethod::MaxWithoutUnknownOverwrite:
+      updateWithMaxWithoutUnknownOverwrite(master_grid, min_i, min_j, max_i, max_j);
       break;
     default:
       break;
