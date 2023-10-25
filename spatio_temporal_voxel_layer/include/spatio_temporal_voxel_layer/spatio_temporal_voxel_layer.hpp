@@ -182,7 +182,8 @@ private:
   rclcpp::Time _last_map_save_time;
   std::string _global_frame;
   double _voxel_size, _voxel_decay;
-  int _combination_method, _mark_threshold;
+  int _mark_threshold;
+  nav2_costmap_2d::CombinationMethod _combination_method;
   volume_grid::GlobalDecayModel _decay_model;
   bool _update_footprint_enabled, _enabled;
   std::vector<geometry_msgs::msg::Point> _transformed_footprint;
