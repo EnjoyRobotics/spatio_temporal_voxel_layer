@@ -181,7 +181,7 @@ private:
   std::unique_ptr<rclcpp::Duration> _map_save_duration;
   rclcpp::Time _last_map_save_time;
   std::string _global_frame;
-  double _voxel_size, _voxel_decay;
+  double _voxel_size, _min_age_outside_frustum, _voxel_decay;
   int _mark_threshold;
   nav2_costmap_2d::CombinationMethod _combination_method;
   volume_grid::GlobalDecayModel _decay_model;
