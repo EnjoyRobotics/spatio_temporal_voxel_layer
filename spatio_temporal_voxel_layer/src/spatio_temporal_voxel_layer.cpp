@@ -291,6 +291,7 @@ void SpatioTemporalVoxelLayer::onInitialize(void)
     if (data_type == "LaserScan") {
       auto sub = std::make_shared<message_filters::Subscriber<sensor_msgs::msg::LaserScan,
           rclcpp_lifecycle::LifecycleNode>>(node, topic, custom_qos_profile, sub_opt);
+      sub->unsubscribe();
 
       std::shared_ptr<tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>
       > filter(new tf2_ros::MessageFilter<sensor_msgs::msg::LaserScan>(
@@ -318,6 +319,7 @@ void SpatioTemporalVoxelLayer::onInitialize(void)
     } else if (data_type == "PointCloud2") {
       auto sub = std::make_shared<message_filters::Subscriber<sensor_msgs::msg::PointCloud2,
           rclcpp_lifecycle::LifecycleNode>>(node, topic, custom_qos_profile, sub_opt);
+      sub->unsubscribe();
 
       std::shared_ptr<tf2_ros::MessageFilter<sensor_msgs::msg::PointCloud2>
       > filter(new tf2_ros::MessageFilter<sensor_msgs::msg::PointCloud2>(
@@ -483,7 +485,7 @@ bool SpatioTemporalVoxelLayer::GetMarkingObservations(
   for (unsigned int i = 0; i != _marking_buffers.size(); ++i) {
     _marking_buffers[i]->Lock();
     _marking_buffers[i]->GetReadings(marking_observations);
-    current = _marking_buffers[i]->UpdatedAtExpectedRate();
+    current = current && _marking_buffers[i]->UpdatedAtExpectedRate();
     _marking_buffers[i]->Unlock();
   }
   marking_observations.insert(
@@ -502,7 +504,7 @@ bool SpatioTemporalVoxelLayer::GetClearingObservations(
   for (unsigned int i = 0; i != _clearing_buffers.size(); ++i) {
     _clearing_buffers[i]->Lock();
     _clearing_buffers[i]->GetReadings(clearing_observations);
-    current = _clearing_buffers[i]->UpdatedAtExpectedRate();
+    current =  current &&_clearing_buffers[i]->UpdatedAtExpectedRate();
     _clearing_buffers[i]->Unlock();
   }
   return current;
